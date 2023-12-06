@@ -1,0 +1,9 @@
+{
+  "name": "roskis",
+  "version": "1.0.0",
+  "scripts": {
+    "emulator": "cd wsl2-avd-connector && connector.bat",
+    "app": "flutter run"
+  },
+  "license": "CC BY-NC 4.0"
+}

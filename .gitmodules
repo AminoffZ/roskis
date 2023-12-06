@@ -1,0 +1,3 @@
+[submodule "wsl2-avd-connector"]
+	path = wsl2-avd-connector
+	url = https://github.com/AminoffZ/wsl2-avd-connector
