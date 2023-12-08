@@ -12,6 +12,10 @@ final router = GoRouter(
       builder: (context, state) => const SignInPage(),
     ),
     GoRoute(
+      path: '/sign-in/manual',
+      builder: (context, state) => const SignInManualPage(),
+    ),
+    GoRoute(
       path: '/create-account',
       builder: (context, state) => const CreateAccountPage(),
     ),
