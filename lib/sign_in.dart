@@ -71,7 +71,7 @@ class SignInPage extends StatelessWidget {
                     onPressed: () => _manualSignIn(context),
                     child: const Text("Sign In With Email"),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -81,12 +81,20 @@ class SignInPage extends StatelessWidget {
   }
 }
 
-class SignInManualPage extends StatelessWidget {
+class SignInManualPage extends StatefulWidget {
   const SignInManualPage({super.key});
+  @override
+  State<StatefulWidget> createState() => _SignInManualPageState();
+}
+
+class _SignInManualPageState extends State<SignInManualPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   // TODO: implement sign in
   _signIn(BuildContext context) {
-    print("Manual Sign In");
+    print(_emailController.text);
+    print(_passwordController.text);
   }
 
   @override
@@ -97,7 +105,7 @@ class SignInManualPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const _SignInManualForm(),
+            _SignInManualForm(_emailController, _passwordController),
             const SizedBox(height: 20),
             TextButton(
               onPressed: () => _signIn(context),
@@ -108,20 +116,29 @@ class SignInManualPage extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 }
 
 class _SignInManualForm extends StatelessWidget {
-  const _SignInManualForm();
+  const _SignInManualForm(this._emailController, this._passwordController);
+  final TextEditingController _emailController;
+  final TextEditingController _passwordController;
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 10),
+    return Padding(
+      padding: const EdgeInsetsDirectional.symmetric(horizontal: 10),
       child: Column(
         children: [
-          _EmailField(),
-          SizedBox(height: 20),
-          _PasswordField(),
+          _EmailField(controller: _emailController),
+          const SizedBox(height: 20),
+          _PasswordField(controller: _passwordController),
         ],
       ),
     );
@@ -129,11 +146,13 @@ class _SignInManualForm extends StatelessWidget {
 }
 
 class _EmailField extends StatelessWidget {
-  const _EmailField();
+  const _EmailField({required this.controller});
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       decoration: const InputDecoration(
         labelText: 'Email',
         border: OutlineInputBorder(),
@@ -143,11 +162,13 @@ class _EmailField extends StatelessWidget {
 }
 
 class _PasswordField extends StatelessWidget {
-  const _PasswordField();
+  const _PasswordField({required this.controller});
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       obscureText: true,
       decoration: const InputDecoration(
         labelText: 'Password',
