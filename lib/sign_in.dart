@@ -35,21 +35,25 @@ class SignInPage extends StatelessWidget {
               runSpacing: 48,
               children: [
                 IconButton(
-                    onPressed: () => _signIn(_OAuthProvider.facebook),
-                    icon: const Icon(Icons.abc)),
+                  onPressed: () => _signIn(_OAuthProvider.facebook),
+                  icon: const Icon(Icons.abc),
+                ),
                 IconButton(
                   onPressed: () => _signIn(_OAuthProvider.google),
                   icon: const Icon(Icons.luggage),
                 ),
                 IconButton(
-                    onPressed: () => _signIn(_OAuthProvider.github),
-                    icon: const Icon(Icons.mouse)),
+                  onPressed: () => _signIn(_OAuthProvider.github),
+                  icon: const Icon(Icons.mouse),
+                ),
                 IconButton(
-                    onPressed: () => _signIn(_OAuthProvider.twitter),
-                    icon: const Icon(Icons.login)),
+                  onPressed: () => _signIn(_OAuthProvider.twitter),
+                  icon: const Icon(Icons.login),
+                ),
                 IconButton(
-                    onPressed: () => _signIn(_OAuthProvider.reddit),
-                    icon: const Icon(Icons.shield)),
+                  onPressed: () => _signIn(_OAuthProvider.reddit),
+                  icon: const Icon(Icons.shield),
+                ),
               ],
             ),
           ),
