@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:roskis/validate_email.dart';
+import 'package:roskis/auth/validate_email.dart';
 
 enum _OAuthProvider {
   facebook,
@@ -82,20 +82,25 @@ class SignInPage extends StatelessWidget {
   }
 }
 
-class SignInManualPage extends StatefulWidget {
-  const SignInManualPage({super.key});
-  @override
-  State<StatefulWidget> createState() => _SignInManualPageState();
-}
+class SignInManualPage extends StatelessWidget {
+  SignInManualPage({super.key});
 
-class _SignInManualPageState extends State<SignInManualPage> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _emailKey = GlobalKey<FormFieldState>();
+  final _passwordKey = GlobalKey<FormFieldState>();
 
   // TODO: implement sign in
   _signIn(BuildContext context) {
-    print(_emailController.text);
-    print(_passwordController.text);
+    if (_emailKey.currentState!.validate() &&
+        _passwordKey.currentState!.validate()) {
+      if (kDebugMode) {
+        print("Sign in with email");
+      }
+    } else {
+      // TODO: Stop spam on multiple errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fix the errors")),
+      );
+    }
   }
 
   @override
@@ -106,7 +111,7 @@ class _SignInManualPageState extends State<SignInManualPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _SignInManualForm(_emailController, _passwordController),
+            _SignInManualForm(_emailKey, _passwordKey),
             const SizedBox(height: 20),
             TextButton(
               onPressed: () => _signIn(context),
@@ -117,19 +122,12 @@ class _SignInManualPageState extends State<SignInManualPage> {
       ),
     );
   }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
 }
 
 class _SignInManualForm extends StatelessWidget {
-  const _SignInManualForm(this._emailController, this._passwordController);
-  final TextEditingController _emailController;
-  final TextEditingController _passwordController;
+  const _SignInManualForm(this._emailKey, this._passwordKey);
+  final GlobalKey<FormFieldState> _emailKey;
+  final GlobalKey<FormFieldState> _passwordKey;
 
   @override
   Widget build(BuildContext context) {
@@ -137,9 +135,9 @@ class _SignInManualForm extends StatelessWidget {
       padding: const EdgeInsetsDirectional.symmetric(horizontal: 10),
       child: Column(
         children: [
-          _EmailField(_emailController),
+          _EmailField(_emailKey),
           const SizedBox(height: 20),
-          _PasswordField(_passwordController),
+          _PasswordField(_passwordKey),
         ],
       ),
     );
@@ -147,13 +145,13 @@ class _SignInManualForm extends StatelessWidget {
 }
 
 class _EmailField extends StatelessWidget {
-  const _EmailField(this._controller);
-  final TextEditingController _controller;
+  const _EmailField(this._emailKey);
+  final GlobalKey<FormFieldState> _emailKey;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: _controller,
+      key: _emailKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: validateEmail,
       decoration: const InputDecoration(
@@ -165,8 +163,8 @@ class _EmailField extends StatelessWidget {
 }
 
 class _PasswordField extends StatefulWidget {
-  const _PasswordField(this.controller);
-  final TextEditingController controller;
+  const _PasswordField(this._passwordKey);
+  final GlobalKey<FormFieldState> _passwordKey;
 
   @override
   State<StatefulWidget> createState() => _PasswordFieldState();
@@ -181,19 +179,30 @@ class _PasswordFieldState extends State<_PasswordField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: widget.controller,
-      obscureText: _obscureText,
-      decoration: InputDecoration(
-        labelText: 'Password',
-        border: const OutlineInputBorder(),
-        suffixIcon: IconButton(
-          onPressed: _toggleObscure,
-          icon: _obscureText
-              ? const Icon(Icons.visibility)
-              : const Icon(Icons.visibility_off),
+    return Column(
+      children: [
+        TextFormField(
+          key: widget._passwordKey,
+          obscureText: _obscureText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your password';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            labelText: 'Password',
+            border: const OutlineInputBorder(),
+            suffixIcon: IconButton(
+              onPressed: _toggleObscure,
+              icon: _obscureText
+                  ? const Icon(Icons.visibility)
+                  : const Icon(Icons.visibility_off),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }

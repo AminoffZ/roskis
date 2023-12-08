@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:roskis/create_account.dart';
+import 'package:roskis/auth/create_account.dart';
+import 'package:roskis/auth/sign_in.dart';
 import 'package:roskis/map.dart';
-import 'package:roskis/sign_in.dart';
 
 final router = GoRouter(
   routes: [
@@ -13,7 +13,7 @@ final router = GoRouter(
     ),
     GoRoute(
       path: '/sign-in/manual',
-      builder: (context, state) => const SignInManualPage(),
+      builder: (context, state) => SignInManualPage(),
     ),
     GoRoute(
       path: '/create-account',
