@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:roskis/validate_email.dart';
 
 enum _OAuthProvider {
   facebook,
@@ -136,9 +137,9 @@ class _SignInManualForm extends StatelessWidget {
       padding: const EdgeInsetsDirectional.symmetric(horizontal: 10),
       child: Column(
         children: [
-          _EmailField(controller: _emailController),
+          _EmailField(_emailController),
           const SizedBox(height: 20),
-          _PasswordField(controller: _passwordController),
+          _PasswordField(_passwordController),
         ],
       ),
     );
@@ -146,13 +147,15 @@ class _SignInManualForm extends StatelessWidget {
 }
 
 class _EmailField extends StatelessWidget {
-  const _EmailField({required this.controller});
-  final TextEditingController controller;
+  const _EmailField(this._controller);
+  final TextEditingController _controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
+      controller: _controller,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: validateEmail,
       decoration: const InputDecoration(
         labelText: 'Email',
         border: OutlineInputBorder(),
@@ -161,18 +164,35 @@ class _EmailField extends StatelessWidget {
   }
 }
 
-class _PasswordField extends StatelessWidget {
-  const _PasswordField({required this.controller});
+class _PasswordField extends StatefulWidget {
+  const _PasswordField(this.controller);
   final TextEditingController controller;
+
+  @override
+  State<StatefulWidget> createState() => _PasswordFieldState();
+}
+
+class _PasswordFieldState extends State<_PasswordField> {
+  bool _obscureText = true;
+
+  _toggleObscure() {
+    setState(() => _obscureText = !_obscureText);
+  }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
-      obscureText: true,
-      decoration: const InputDecoration(
+      controller: widget.controller,
+      obscureText: _obscureText,
+      decoration: InputDecoration(
         labelText: 'Password',
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
+        suffixIcon: IconButton(
+          onPressed: _toggleObscure,
+          icon: _obscureText
+              ? const Icon(Icons.visibility)
+              : const Icon(Icons.visibility_off),
+        ),
       ),
     );
   }
