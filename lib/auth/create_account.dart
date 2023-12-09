@@ -14,6 +14,7 @@ class CreateAccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text('Create Account')),
       body: Theme(
         data: ThemeData(
           iconTheme: const IconThemeData(size: 84),

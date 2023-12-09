@@ -22,7 +22,7 @@ class SignInPage extends StatelessWidget {
   }
 
   _manualSignIn(BuildContext context) {
-    context.push('/sign-in/manual');
+    context.push('/profile/sign-in/manual');
   }
 
   @override
